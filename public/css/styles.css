@@ -3,17 +3,19 @@
     width: 100%;
     max-width: 1000px;
     margin: auto;
-    overflow: hidden; /* Pour empêcher le débordement des logos */
+    overflow: hidden;
 }
 
 #map {
     width: 100%;
+    height: auto;
+    display: block;
 }
 
 .logo-container {
     position: absolute;
-    width: 30px;
-    height: 30px;
+    width: 3%; /* Ou une autre valeur relative */
+    height: 3%; /* Ou une autre valeur relative */
     cursor: grab;
 }
 

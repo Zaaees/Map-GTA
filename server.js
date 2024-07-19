@@ -18,14 +18,14 @@ try {
 } catch (err) {
     console.log('No existing logos file, creating a new one');
     logos = {
-        'filter-logo1': { color: 'transparent', left: '100px', top: '50px' },
-        'filter-logo2': { color: 'transparent', left: '300px', top: '200px' },
-        'filter-logo3': { color: 'transparent', left: '300px', top: '200px' },
-        'filter-logo4': { color: 'transparent', left: '300px', top: '200px' },
-        'filter-logo5': { color: 'transparent', left: '300px', top: '200px' },
-        'filter-logo6': { color: 'transparent', left: '300px', top: '200px' },
-        'filter-logo7': { color: 'transparent', left: '300px', top: '200px' },
-        'filter-logo8': { color: 'transparent', left: '300px', top: '200px' },
+        'filter-logo1': { color: 'transparent', left: '10%', top: '5%' },
+        'filter-logo2': { color: 'transparent', left: '30%', top: '20%' },
+        'filter-logo3': { color: 'transparent', left: '30%', top: '20%' },
+        'filter-logo4': { color: 'transparent', left: '30%', top: '20%' },
+        'filter-logo5': { color: 'transparent', left: '30%', top: '20%' },
+        'filter-logo6': { color: 'transparent', left: '30%', top: '20%' },
+        'filter-logo7': { color: 'transparent', left: '30%', top: '20%' },
+        'filter-logo8': { color: 'transparent', left: '30%', top: '20%' },
     };
     saveLogos(); // Créer le fichier immédiatement
 }

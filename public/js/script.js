@@ -9,15 +9,15 @@ document.addEventListener('DOMContentLoaded', function () {
     .then(response => response.json())
     .then(savedLogos => {
         console.log('Loaded saved logos:', savedLogos);
-        Object.entries(savedLogos).forEach(([id, data]) => {
-            const container = document.querySelector(`.logo-container:has(#${id.replace('filter-', '')})`);
-            if (container) {
-                container.style.left = data.left;
-                container.style.top = data.top;
-                console.log('Updated position for', id, 'to', data.left, data.top);
-            } else {
-                console.log('Container not found for', id);
-            }
+Object.entries(savedLogos).forEach(([id, data]) => {
+    const container = document.querySelector(`.logo-container:has(#${id.replace('filter-', '')})`);
+    if (container) {
+        container.style.left = data.left;
+        container.style.top = data.top;
+        console.log('Updated position for', id, 'to', data.left, data.top);
+    } else {
+        console.log('Container not found for', id);
+    }
             const dotElement = document.getElementById('dot-' + id.replace('filter-', ''));
             if (dotElement) {
                 dotElement.style.backgroundColor = data.color;
@@ -79,18 +79,17 @@ document.addEventListener('DOMContentLoaded', function () {
             let shiftY = e.clientY - container.getBoundingClientRect().top;
 
             function moveAt(pageX, pageY) {
-                let newLeft = pageX - shiftX;
-                let newTop = pageY - shiftY;
-                
-                // Limiter le déplacement à l'intérieur du conteneur de la carte
                 const mapContainer = document.getElementById('map-container');
                 const mapRect = mapContainer.getBoundingClientRect();
                 
-                newLeft = Math.max(0, Math.min(newLeft, mapRect.width - container.offsetWidth));
-                newTop = Math.max(0, Math.min(newTop, mapRect.height - container.offsetHeight));
-
-                container.style.left = newLeft + 'px';
-                container.style.top = newTop + 'px';
+                let newLeft = ((pageX - mapRect.left - shiftX) / mapRect.width) * 100;
+                let newTop = ((pageY - mapRect.top - shiftY) / mapRect.height) * 100;
+                
+                newLeft = Math.max(0, Math.min(newLeft, 100));
+                newTop = Math.max(0, Math.min(newTop, 100));
+            
+                container.style.left = newLeft + '%';
+                container.style.top = newTop + '%';
             }
 
             function onMouseMove(e) {
