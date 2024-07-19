@@ -235,29 +235,34 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!isAdminMode) return;
             e.preventDefault();
             const container = this;
-            let shiftX = e.clientX - container.getBoundingClientRect().left;
-            let shiftY = e.clientY - container.getBoundingClientRect().top;
-
+            const mapContainer = document.getElementById('map-container');
+            const mapRect = mapContainer.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+    
+            let shiftX = (e.clientX - containerRect.left) / mapRect.width * 100;
+            let shiftY = (e.clientY - containerRect.top) / mapRect.height * 100;
+    
             function moveAt(pageX, pageY) {
-                const mapContainer = document.getElementById('map-container');
-                const mapRect = mapContainer.getBoundingClientRect();
-
-                let newLeft = ((pageX - mapRect.left - shiftX) / mapRect.width) * 100;
-                let newTop = ((pageY - mapRect.top - shiftY) / mapRect.height) * 100;
-
+                const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
+                const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+                const scale = mapContainer.offsetWidth / mapRect.width;
+    
+                let newLeft = ((pageX - mapRect.left - scrollX) / scale - shiftX * mapRect.width / 100) / mapRect.width * 100;
+                let newTop = ((pageY - mapRect.top - scrollY) / scale - shiftY * mapRect.height / 100) / mapRect.height * 100;
+    
                 newLeft = Math.max(0, Math.min(newLeft, 100));
                 newTop = Math.max(0, Math.min(newTop, 100));
-
+    
                 container.style.left = newLeft + '%';
                 container.style.top = newTop + '%';
             }
-
+    
             function onMouseMove(e) {
                 moveAt(e.pageX, e.pageY);
             }
-
+    
             document.addEventListener('mousemove', onMouseMove);
-
+    
             document.addEventListener('mouseup', function() {
                 document.removeEventListener('mousemove', onMouseMove);
                 updateLogoPosition(
@@ -269,10 +274,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 );
                 container.classList.remove('dragging');
             }, { once: true });
-
+    
             container.classList.add('dragging');
         });
-
+    
         container.ondragstart = function () {
             return false;
         };
