@@ -1,0 +1,12 @@
+À faire : 
+
+- Corriger le problème de sauvegarde des positions sur le JSON
+- Corriger le problème de déplacement des icones si la page est zoomée ou si je suis descendu dessus la page
+
+Prompt pour corriger le problème de sauvegarde :
+
+J'ai un problème dans le code pour mon site. Les positions des logos ne sont pas sauvegardés dans le fichier JSON lorsque je les déplace, alors que c'était le cas avant. Pourquoi ?
+
+Prompt pour corriger le déplacement des icones :
+
+J'ai un problème dans le code de mon site. Lorsque je veux déplacer les icones et que j'ai zoomé ou que j'ai descendu avec ma molette sur le site, les icones se déplacent comme si elles étaient décalées de ma souris, et c'est dérangeant. Comment régler ce problème ?

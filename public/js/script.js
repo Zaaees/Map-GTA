@@ -6,41 +6,39 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('DOM loaded, found', logoContainers.length, 'logo containers');
 
     // Fonction pour charger les logos
-function loadLogos() {
-    fetch('/get-logos')
-    .then(response => response.json())
-    .then(savedLogos => {
-        console.log('Loaded saved logos:', savedLogos);
-        Object.entries(savedLogos).forEach(([id, data]) => {
-            const container = document.querySelector(`.logo-container:has(#${id.replace('filter-', '')})`);
-            if (container) {
-                container.style.left = data.left;
-                container.style.top = data.top;
-                if (data.width) {
-                    container.style.width = data.width;
-                }
-                if (data.height) {
-                    container.style.height = data.height;
-                }
-                updateDotAndHandleSize(container);
-                console.log('Updated position and size for', id, 'to', data.left, data.top, data.width, data.height);
-            } else {
-                console.log('Container not found for', id);
-            }
-            const dotElement = document.getElementById('dot-' + id.replace('filter-', ''));
-            if (dotElement) {
-                dotElement.style.backgroundColor = data.color;
-            }
-        });
-    })
-    .catch(error => console.error('Error loading logos:', error));
-}
+    function loadLogos() {
+        fetch('/get-logos')
+            .then(response => response.json())
+            .then(savedLogos => {
+                console.log('Loaded saved logos:', savedLogos);
+                Object.entries(savedLogos).forEach(([id, data]) => {
+                    const container = document.querySelector(`.logo-container:has(#${id.replace('filter-', '')})`);
+                    if (container) {
+                        container.style.left = data.left;
+                        container.style.top = data.top;
+                        if (data.width) {
+                            container.style.width = data.width;
+                        }
+                        if (data.height) {
+                            container.style.height = data.height;
+                        }
+                        updateDotAndHandleSize(container);
+                        console.log('Updated position and size for', id, 'to', data.left, data.top, data.width, data.height);
+                    } else {
+                        console.log('Container not found for', id);
+                    }
+                    const dotElement = document.getElementById('dot-' + id.replace('filter-', ''));
+                    if (dotElement) {
+                        dotElement.style.backgroundColor = data.color;
+                    }
+                });
+            })
+            .catch(error => console.error('Error loading logos:', error));
+    }
 
     // Charger les logos initialement
     loadLogos();
 
-
-    
     // Fonction pour activer/désactiver le mode admin
     function toggleAdminMode(enabled) {
         isAdminMode = enabled;
@@ -55,8 +53,6 @@ function loadLogos() {
         });
     }
 
-
-    
     // Initialiser en mode visiteur
     toggleAdminMode(false);
 
@@ -68,7 +64,7 @@ function loadLogos() {
     adminLoginButton.addEventListener('click', () => {
         loginModal.style.display = 'block';
     });
-    
+
     adminLoginForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const username = document.getElementById('username').value;
@@ -83,6 +79,7 @@ function loadLogos() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
+                isAdminMode = true;
                 toggleAdminMode(true);
                 loginModal.style.display = 'none';
                 alert('Mode administrateur activé');
@@ -98,36 +95,36 @@ function loadLogos() {
 
     // Charger les positions sauvegardées
     fetch('/get-logos')
-    .then(response => response.json())
-    .then(savedLogos => {
-        console.log('Loaded saved logos:', savedLogos);
-        Object.entries(savedLogos).forEach(([id, data]) => {
-            const container = document.querySelector(`.logo-container:has(#${id.replace('filter-', '')})`);
-            if (container) {
-                container.style.left = data.left;
-                container.style.top = data.top;
-                if (data.width) {
-                    container.style.width = data.width;
-                }
-                if (data.height) {
-                    container.style.height = data.height;
-                }
-                console.log('Updated position and size for', id, 'to', data.left, data.top, data.width, data.height);
+        .then(response => response.json())
+        .then(savedLogos => {
+            console.log('Loaded saved logos:', savedLogos);
+            Object.entries(savedLogos).forEach(([id, data]) => {
+                const container = document.querySelector(`.logo-container:has(#${id.replace('filter-', '')})`);
+                if (container) {
+                    container.style.left = data.left;
+                    container.style.top = data.top;
+                    if (data.width) {
+                        container.style.width = data.width;
+                    }
+                    if (data.height) {
+                        container.style.height = data.height;
+                    }
+                    console.log('Updated position and size for', id, 'to', data.left, data.top, data.width, data.height);
 
-                // Mise à jour de la taille de la pastille
-                const dot = container.querySelector('.status-dot');
-                dot.style.width = `${container.offsetWidth * 0.2}px`;
-                dot.style.height = `${container.offsetWidth * 0.2}px`;
-            } else {
-                console.log('Container not found for', id);
-            }
-            const dotElement = document.getElementById('dot-' + id.replace('filter-', ''));
-            if (dotElement) {
-                dotElement.style.backgroundColor = data.color;
-            }
-        });
-    })
-    .catch(error => console.error('Error loading logos:', error));
+                    // Mise à jour de la taille de la pastille
+                    const dot = container.querySelector('.status-dot');
+                    dot.style.width = `${container.offsetWidth * 0.2}px`;
+                    dot.style.height = `${container.offsetWidth * 0.2}px`;
+                } else {
+                    console.log('Container not found for', id);
+                }
+                const dotElement = document.getElementById('dot-' + id.replace('filter-', ''));
+                if (dotElement) {
+                    dotElement.style.backgroundColor = data.color;
+                }
+            });
+        })
+        .catch(error => console.error('Error loading logos:', error));
 
     function changeFilterColor(dotElement) {
         const currentColor = dotElement.style.backgroundColor;
@@ -235,7 +232,7 @@ function loadLogos() {
     // Ajouter des événements pour le glisser-déposer des logos
     logoContainers.forEach(container => {
         container.addEventListener('mousedown', function (e) {
-            console.log('Mousedown on container', this);
+            if (!isAdminMode) return;
             e.preventDefault();
             const container = this;
             let shiftX = e.clientX - container.getBoundingClientRect().left;
@@ -244,13 +241,13 @@ function loadLogos() {
             function moveAt(pageX, pageY) {
                 const mapContainer = document.getElementById('map-container');
                 const mapRect = mapContainer.getBoundingClientRect();
-                
+
                 let newLeft = ((pageX - mapRect.left - shiftX) / mapRect.width) * 100;
                 let newTop = ((pageY - mapRect.top - shiftY) / mapRect.height) * 100;
-                
+
                 newLeft = Math.max(0, Math.min(newLeft, 100));
                 newTop = Math.max(0, Math.min(newTop, 100));
-            
+
                 container.style.left = newLeft + '%';
                 container.style.top = newTop + '%';
             }
@@ -263,7 +260,13 @@ function loadLogos() {
 
             document.addEventListener('mouseup', function() {
                 document.removeEventListener('mousemove', onMouseMove);
-                updateLogoPosition(container.querySelector('.logo').id, container.style.left, container.style.top);
+                updateLogoPosition(
+                    container.querySelector('.logo').id,
+                    container.style.left,
+                    container.style.top,
+                    container.style.width,
+                    container.style.height
+                );
                 container.classList.remove('dragging');
             }, { once: true });
 
@@ -274,45 +277,52 @@ function loadLogos() {
             return false;
         };
     });
+
+    function updateLogoColor(id, color) {
+        if (!isAdminMode) return;
+        fetch('/update-logo-color', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: 'filter-' + id, color: color })
+        });
+    }
+
+    function updateLogoPosition(id, left, top, width, height) {
+        if (!isAdminMode) return;
+        fetch('/update-logo-position', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: id, left, top, width, height })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Position mise à jour avec succès');
+        })
+        .catch(error => {
+            console.error('Erreur lors de la mise à jour de la position:', error);
+        });
+    }
+
+    function updateDotAndHandleSize(container) {
+        const dot = container.querySelector('.status-dot');
+        const handles = container.querySelectorAll('.resize-handle');
+        const containerWidth = container.offsetWidth;
+        const containerHeight = container.offsetHeight;
+
+        // Mise à jour de la taille de la pastille
+        const dotSize = Math.min(Math.max(containerWidth * 0.3, 10), 30);
+        dot.style.width = `${dotSize}px`;
+        dot.style.height = `${dotSize}px`;
+
+        // Mise à jour de la taille des carrés de redimensionnement
+        const handleSize = Math.min(Math.max(containerWidth * 0.1, 5), 15);
+        handles.forEach(handle => {
+            handle.style.width = `${handleSize}px`;
+            handle.style.height = `${handleSize}px`;
+        });
+    }
 });
-
-function updateLogoColor(id, color) {
-    if (!isAdminMode) return;
-    fetch('/update-logo-color', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ id: 'filter-' + id, color: color })
-    });
-}
-
-function updateLogoPosition(id, left, top, width, height) {
-    if (!isAdminMode) return;
-    fetch('/update-logo-position', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ id: 'filter-' + id, left, top, width, height })
-    });
-}
-
-function updateDotAndHandleSize(container) {
-    const dot = container.querySelector('.status-dot');
-    const handles = container.querySelectorAll('.resize-handle');
-    const containerWidth = container.offsetWidth;
-    const containerHeight = container.offsetHeight;
-
-    // Mise à jour de la taille de la pastille
-    const dotSize = Math.min(Math.max(containerWidth * 0.3, 10), 30);
-    dot.style.width = `${dotSize}px`;
-    dot.style.height = `${dotSize}px`;
-
-    // Mise à jour de la taille des carrés de redimensionnement
-    const handleSize = Math.min(Math.max(containerWidth * 0.1, 5), 15);
-    handles.forEach(handle => {
-        handle.style.width = `${handleSize}px`;
-        handle.style.height = `${handleSize}px`;
-    });
-}
