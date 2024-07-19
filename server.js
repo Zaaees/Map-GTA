@@ -102,7 +102,7 @@ app.post('/update-logo-position', requireAuth, (req, res) => {
 
 app.post('/admin-login', (req, res) => {
     const { username, password } = req.body;
-    if (username === 'Admin' && password === 'Gruppe6') {
+    if (username === 'HG' && password === 'G6') {
         req.session.isAdmin = true;
         res.status(200).send({ success: true });
     } else {

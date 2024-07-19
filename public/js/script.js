@@ -6,6 +6,15 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('DOM loaded, found', logoContainers.length, 'logo containers');
 
     // Fonction pour charger les logos
+    function updateLogoTitles(savedLogos) {
+        Object.entries(savedLogos).forEach(([id, data]) => {
+            const logoElement = document.getElementById(id);
+            if (logoElement && data.name) {
+                logoElement.setAttribute('title', data.name);
+            }
+        });
+    }
+    
     function loadLogos() {
         fetch('/get-logos')
             .then(response => response.json())
@@ -32,6 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         dotElement.style.backgroundColor = data.color || 'transparent';
                     }
                 });
+                updateLogoTitles(savedLogos);
             })
             .catch(error => console.error('Error loading logos:', error));
     }
@@ -56,6 +66,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initialiser en mode visiteur
     toggleAdminMode(false);
 
+
+    
     // Gestion du bouton de connexion admin
     const adminLoginButton = document.getElementById('admin-login-button');
     const loginModal = document.getElementById('login-modal');
@@ -319,6 +331,28 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function updateLogoName(id, name) {
+        if (!isAdminMode) return;
+        fetch('/update-logo-name', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id, name })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Nom mis à jour avec succès');
+            const logoElement = document.getElementById(id);
+            if (logoElement) {
+                logoElement.setAttribute('title', name);
+            }
+        })
+        .catch(error => {
+            console.error('Erreur lors de la mise à jour du nom:', error);
+        });
+    }
+
     function updateDotAndHandleSize(container) {
         const dot = container.querySelector('.status-dot');
         const handles = container.querySelectorAll('.resize-handle');
@@ -337,4 +371,26 @@ document.addEventListener('DOMContentLoaded', function () {
             handle.style.height = `${handleSize}px`;
         });
     }
-});
+});    
+
+function updateLogoName(id, name) {
+    if (!isAdminMode) return;
+    fetch('/update-logo-name', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id, name })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Nom mis à jour avec succès');
+        const logoElement = document.getElementById(id);
+        if (logoElement) {
+            logoElement.setAttribute('title', name);
+        }
+    })
+    .catch(error => {
+        console.error('Erreur lors de la mise à jour du nom:', error);
+    });
+}
