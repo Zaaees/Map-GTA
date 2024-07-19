@@ -27,9 +27,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     } else {
                         console.log('Container not found for', id);
                     }
-                    const dotElement = document.getElementById('dot-' + id.replace('filter-', ''));
+                    const dotElement = document.getElementById('dot-' + id);
                     if (dotElement) {
-                        dotElement.style.backgroundColor = data.color;
+                        dotElement.style.backgroundColor = data.color || 'transparent';
                     }
                 });
             })
@@ -290,7 +290,14 @@ document.addEventListener('DOMContentLoaded', function () {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ id: 'filter-' + id, color: color })
+            body: JSON.stringify({ id: id, color: color })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Couleur mise à jour avec succès');
+        })
+        .catch(error => {
+            console.error('Erreur lors de la mise à jour de la couleur:', error);
         });
     }
 
