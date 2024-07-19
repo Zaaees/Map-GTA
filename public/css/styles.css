@@ -14,14 +14,15 @@
 
 .logo-container {
     position: absolute;
-    width: 3%; /* Ou une autre valeur relative */
-    height: 3%; /* Ou une autre valeur relative */
+    width: 3%; /* Taille initiale, sera modifiable */
+    height: auto; /* Hauteur automatique pour conserver les proportions */
     cursor: grab;
 }
 
 .logo {
     width: 100%;
     height: 100%;
+    object-fit: contain; /* Assurez-vous que le logo s'adapte correctement */
 }
 
 .filter {
@@ -37,15 +38,29 @@
 
 .status-dot {
     position: absolute;
-    top: -5px;
-    right: -5px;
-    width: 10px;
-    height: 10px;
+    top: -10%;
+    right: -10%;
+    width: 20%;
+    height: 20%;
     border-radius: 50%;
     background-color: transparent;
-    border: 2px solid white; /* Pour la rendre visible quand elle est transparente */
+    border: 2px solid white;
+    box-sizing: border-box;
 }
 
 .logo-container.dragging {
     cursor: grabbing;
 }
+
+.resize-handle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    border: 1px solid black;
+}
+
+.resize-handle.nw { top: -5px; left: -5px; cursor: nwse-resize; }
+.resize-handle.ne { top: -5px; right: -5px; cursor: nesw-resize; }
+.resize-handle.sw { bottom: -5px; left: -5px; cursor: nesw-resize; }
+.resize-handle.se { bottom: -5px; right: -5px; cursor: nwse-resize; }
