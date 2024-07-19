@@ -1,0 +1,42 @@
+{
+  "filter-logo1": {
+    "color": "rgb(255, 165, 0)",
+    "left": "401.469px",
+    "top": "196.562px"
+  },
+  "filter-logo2": {
+    "color": "rgb(255, 165, 0)",
+    "left": "611.929px",
+    "top": "265px"
+  },
+  "filter-logo3": {
+    "color": "rgb(0, 255, 0)",
+    "left": "464.25px",
+    "top": "459.75px"
+  },
+  "filter-logo4": {
+    "color": "rgb(0, 255, 0)",
+    "left": "855px",
+    "top": "285px"
+  },
+  "filter-logo5": {
+    "color": "rgb(0, 255, 0)",
+    "left": "701.5px",
+    "top": "279px"
+  },
+  "filter-logo6": {
+    "color": "rgb(0, 255, 0)",
+    "left": "660.167px",
+    "top": "419.667px"
+  },
+  "filter-logo7": {
+    "color": "rgb(0, 255, 0)",
+    "left": "597.5px",
+    "top": "390px"
+  },
+  "filter-logo8": {
+    "color": "rgb(255, 0, 0)",
+    "left": "439.92px",
+    "top": "357.714px"
+  }
+}
