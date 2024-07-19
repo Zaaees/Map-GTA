@@ -6,48 +6,46 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('DOM loaded, found', logoContainers.length, 'logo containers');
 
     // Fonction pour charger les logos
-    function loadLogos() {
-        fetch('/get-logos')
-        .then(response => response.json())
-        .then(savedLogos => {
-            console.log('Loaded saved logos:', savedLogos);
-            Object.entries(savedLogos).forEach(([id, data]) => {
-                const container = document.querySelector(`.logo-container:has(#${id.replace('filter-', '')})`);
-                if (container) {
-                    container.style.left = data.left;
-                    container.style.top = data.top;
-                    if (data.width) {
-                        container.style.width = data.width;
-                    }
-                    if (data.height) {
-                        container.style.height = data.height;
-                    }
-                    console.log('Updated position and size for', id, 'to', data.left, data.top, data.width, data.height);
-
-                    // Mise à jour de la taille de la pastille
-                    const dot = container.querySelector('.status-dot');
-                    dot.style.width = `${container.offsetWidth * 0.2}px`;
-                    dot.style.height = `${container.offsetWidth * 0.2}px`;
-                } else {
-                    console.log('Container not found for', id);
+function loadLogos() {
+    fetch('/get-logos')
+    .then(response => response.json())
+    .then(savedLogos => {
+        console.log('Loaded saved logos:', savedLogos);
+        Object.entries(savedLogos).forEach(([id, data]) => {
+            const container = document.querySelector(`.logo-container:has(#${id.replace('filter-', '')})`);
+            if (container) {
+                container.style.left = data.left;
+                container.style.top = data.top;
+                if (data.width) {
+                    container.style.width = data.width;
                 }
-                const dotElement = document.getElementById('dot-' + id.replace('filter-', ''));
-                if (dotElement) {
-                    dotElement.style.backgroundColor = data.color;
+                if (data.height) {
+                    container.style.height = data.height;
                 }
-            });
-        })
-        .catch(error => console.error('Error loading logos:', error));
-    }
+                updateDotAndHandleSize(container);
+                console.log('Updated position and size for', id, 'to', data.left, data.top, data.width, data.height);
+            } else {
+                console.log('Container not found for', id);
+            }
+            const dotElement = document.getElementById('dot-' + id.replace('filter-', ''));
+            if (dotElement) {
+                dotElement.style.backgroundColor = data.color;
+            }
+        });
+    })
+    .catch(error => console.error('Error loading logos:', error));
+}
 
     // Charger les logos initialement
     loadLogos();
 
+
+    
     // Fonction pour activer/désactiver le mode admin
     function toggleAdminMode(enabled) {
         isAdminMode = enabled;
         logoContainers.forEach(container => {
-            container.style.cursor = enabled ? 'grab' : 'default';
+            container.style.pointerEvents = enabled ? 'auto' : 'none';
             container.querySelectorAll('.resize-handle').forEach(handle => {
                 handle.style.display = enabled ? 'block' : 'none';
             });
@@ -57,6 +55,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+
+    
     // Initialiser en mode visiteur
     toggleAdminMode(false);
 
@@ -68,18 +68,32 @@ document.addEventListener('DOMContentLoaded', function () {
     adminLoginButton.addEventListener('click', () => {
         loginModal.style.display = 'block';
     });
-
+    
     adminLoginForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
-        if (username === 'Admin' && password === 'Gruppe6') {
-            toggleAdminMode(true);
-            loginModal.style.display = 'none';
-            alert('Mode administrateur activé');
-        } else {
-            alert('Identifiants incorrects');
-        }
+        fetch('/admin-login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                toggleAdminMode(true);
+                loginModal.style.display = 'none';
+                alert('Mode administrateur activé');
+            } else {
+                alert('Identifiants incorrects');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur lors de la connexion:', error);
+            alert('Erreur lors de la connexion');
+        });
     });
 
     // Charger les positions sauvegardées
@@ -194,6 +208,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         document.addEventListener('mousemove', resize);
         document.addEventListener('mouseup', stopResize);
+        updateDotAndHandleSize(container);
     }
 
     // Ajout des événements de redimensionnement
@@ -262,6 +277,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function updateLogoColor(id, color) {
+    if (!isAdminMode) return;
     fetch('/update-logo-color', {
         method: 'POST',
         headers: {
@@ -272,11 +288,31 @@ function updateLogoColor(id, color) {
 }
 
 function updateLogoPosition(id, left, top, width, height) {
+    if (!isAdminMode) return;
     fetch('/update-logo-position', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ id: 'filter-' + id, left, top, width, height })
+    });
+}
+
+function updateDotAndHandleSize(container) {
+    const dot = container.querySelector('.status-dot');
+    const handles = container.querySelectorAll('.resize-handle');
+    const containerWidth = container.offsetWidth;
+    const containerHeight = container.offsetHeight;
+
+    // Mise à jour de la taille de la pastille
+    const dotSize = Math.min(Math.max(containerWidth * 0.3, 10), 30);
+    dot.style.width = `${dotSize}px`;
+    dot.style.height = `${dotSize}px`;
+
+    // Mise à jour de la taille des carrés de redimensionnement
+    const handleSize = Math.min(Math.max(containerWidth * 0.1, 5), 15);
+    handles.forEach(handle => {
+        handle.style.width = `${handleSize}px`;
+        handle.style.height = `${handleSize}px`;
     });
 }

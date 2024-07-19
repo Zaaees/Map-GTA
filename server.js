@@ -104,7 +104,6 @@ app.post('/admin-login', (req, res) => {
         res.status(401).send({ success: false, message: 'Identifiants incorrects' });
     }
 });
-
 // Nouvelle route pour obtenir les positions actuelles des logos
 app.get('/get-logos', (req, res) => {
     res.json(logos);

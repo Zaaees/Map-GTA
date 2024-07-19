@@ -1,0 +1,41 @@
+        <img src="/images/gta_v_map.jpg" alt="GTA V Map" id="map">
+        <div class="logo" id="logoarmurerie" style="top: 50px; left: 100px;"></div>
+        <div class="logo" id="logobahamas" style="top: 200px; left: 300px;"></div>
+        <div class="logo" id="logomadinina" style="top: 200px; left: 300px;"></div>
+        <div class="logo" id="logochickenchick" style="top: 200px; left: 300px;"></div>
+        <div class="logo" id="logopaletocustom" style="top: 200px; left: 300px;"></div>
+        <div class="logo" id="logoredwood" style="top: 200px; left: 300px;"></div>
+        <div class="logo" id="logohuntingzone" style="top: 200px; left: 300px;"></div>
+        <div class="logo" id="logogruppe6" style="top: 200px; left: 300px;"></div>
+        <div class="logo" id="logogouvernement" style="top: 200px; left: 300px;"></div>
+
+        let logos = {
+            logoarmurerie: 'green',
+            logobahamas: 'green',
+            logomadinina: 'green',
+            logochickenchick: 'green',
+            logopaletocustom: 'green',
+            logoredwood: 'green',
+            logohuntingzone: 'green',
+            logogruppe6: 'green',
+            logogouvernement: 'green',
+
+            <img src="/images/gta_v_map.jpg" alt="GTA V Map" id="map">
+            <img src="/images/logoarmurerie.png" class="logo" id="logo1" style="top: 50px; left: 100px;">
+            <img src="/images/logobahamas.png" class="logo" id="logo2" style="top: 200px; left: 300px;">
+            <img src="/images/logomadinina.png" class="logo" id="logo2" style="top: 200px; left: 300px;">
+            <img src="/images/logogouvernement.png" class="logo" id="logo2" style="top: 200px; left: 300px;">
+            <img src="/images/logogruppe6.png" class="logo" id="logo2" style="top: 200px; left: 300px;">
+            <img src="/images/logohuntingzone.png" class="logo" id="logo2" style="top: 200px; left: 300px;">
+            <img src="/images/logochickenchick.png" class="logo" id="logo2" style="top: 200px; left: 300px;">
+            <img src="/images/logopaletocustom.png" class="logo" id="logo2" style="top: 200px; left: 300px;">
+            <img src="/images/logoredwood.png" class="logo" id="logo2" style="top: 200px; left: 300px;">
+
+            'filter-logo1': 'transparent',
+            'filter-logo2': 'transparent',
+            'filter-logo3': 'transparent',
+            'filter-logo4': 'transparent',
+            'filter-logo5': 'transparent',
+            'filter-logo6': 'transparent',
+            'filter-logo7': 'transparent',
+            'filter-logo8': 'transparent',

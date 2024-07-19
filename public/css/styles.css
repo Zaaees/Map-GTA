@@ -38,10 +38,14 @@
 
 .status-dot {
     position: absolute;
-    top: -10%;
-    right: -10%;
-    width: 20%;
-    height: 20%;
+    top: -15%;
+    right: -15%;
+    width: 30%;
+    height: 30%;
+    min-width: 10px;
+    min-height: 10px;
+    max-width: 30px;
+    max-height: 30px;
     border-radius: 50%;
     background-color: transparent;
     border: 2px solid white;
@@ -54,13 +58,20 @@
 
 .resize-handle {
     position: absolute;
-    width: 10px;
-    height: 10px;
+    display: none;
+    width: 10%;
+    height: 10%;
+    min-width: 5px;
+    min-height: 5px;
+    max-width: 15px;
+    max-height: 15px;
     background-color: white;
     border: 1px solid black;
+    box-sizing: border-box;
 }
 
 .resize-handle.nw { top: -5px; left: -5px; cursor: nwse-resize; }
 .resize-handle.ne { top: -5px; right: -5px; cursor: nesw-resize; }
 .resize-handle.sw { bottom: -5px; left: -5px; cursor: nesw-resize; }
 .resize-handle.se { bottom: -5px; right: -5px; cursor: nwse-resize; }
+
