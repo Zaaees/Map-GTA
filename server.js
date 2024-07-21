@@ -3,18 +3,22 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
 const session = require('express-session');
+const dataDir = path.join(__dirname, '.data');
+if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir);
+}
+
+const logosFilePath = path.join(dataDir, 'logos.json');
 
 const app = express();
 
 app.use(session({
-    secret: 'Gruppe6Secret',
+    secret: process.env.SESSION_SECRET || 'Gruppe6Secret',
     resave: false,
     saveUninitialized: true
 }));
 app.use(bodyParser.json());
 app.use(express.static('public'));
-
-const logosFilePath = path.join(__dirname, 'logos.json');
 
 // Charger les positions des logos depuis le fichier
 let logos = {};
@@ -114,6 +118,7 @@ app.get('/get-logos', (req, res) => {
     res.json(logos);
 });
 
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
