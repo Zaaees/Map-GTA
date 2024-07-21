@@ -21,30 +21,33 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(savedLogos => {
                 console.log('Loaded saved logos:', savedLogos);
                 Object.entries(savedLogos).forEach(([id, data]) => {
-                    const container = document.querySelector(`.logo-container:has(#${id.replace('filter-', '')})`);
+                    const container = document.querySelector(`#container-${id}`);
                     if (container) {
                         container.style.left = data.left;
                         container.style.top = data.top;
-                        if (data.width) {
-                            container.style.width = data.width;
+                        if (data.width) container.style.width = data.width;
+                        if (data.height) container.style.height = data.height;
+                        if (data.name) {
+                            container.setAttribute('title', data.name);
+                            // Ajoutez également le nom au logo lui-même
+                            const logo = container.querySelector('.logo');
+                            if (logo) {
+                                logo.setAttribute('title', data.name);
+                            }
                         }
-                        if (data.height) {
-                            container.style.height = data.height;
+                        
+                        const dotElement = container.querySelector('.status-dot');
+                        if (dotElement) {
+                            dotElement.style.backgroundColor = data.color || 'transparent';
                         }
-                        updateDotAndHandleSize(container);
-                        console.log('Updated position and size for', id, 'to', data.left, data.top, data.width, data.height);
-                    } else {
-                        console.log('Container not found for', id);
-                    }
-                    const dotElement = document.getElementById('dot-' + id);
-                    if (dotElement) {
-                        dotElement.style.backgroundColor = data.color || 'transparent';
                     }
                 });
-                updateLogoTitles(savedLogos);
             })
             .catch(error => console.error('Error loading logos:', error));
     }
+    
+    // Appeler loadLogos au chargement de la page
+    document.addEventListener('DOMContentLoaded', loadLogos);
 
     // Charger les logos initialement
     loadLogos();
@@ -53,13 +56,32 @@ document.addEventListener('DOMContentLoaded', function () {
     function toggleAdminMode(enabled) {
         isAdminMode = enabled;
         logoContainers.forEach(container => {
-            container.style.pointerEvents = enabled ? 'auto' : 'none';
+            // Permettre toujours les interactions pour le survol
+            container.style.pointerEvents = 'auto';
+            
+            // Afficher/cacher les poignées de redimensionnement
             container.querySelectorAll('.resize-handle').forEach(handle => {
                 handle.style.display = enabled ? 'block' : 'none';
             });
+            
+            // Activer/désactiver le déplacement
+            container.draggable = enabled;
         });
+        
         logos.forEach(logo => {
-            logo.style.pointerEvents = enabled ? 'auto' : 'none';
+            logo.addEventListener('click', function () {
+                if (!isAdminMode) return; // Sortir si pas en mode admin
+                console.log('Logo clicked:', this.id);
+                const dotElement = document.getElementById('dot-' + this.id);
+                if (dotElement) {
+                    console.log('Dot element found:', dotElement);
+                    const newColor = changeFilterColor(dotElement);
+                    console.log('New color:', newColor);
+                    updateLogoColor(this.id, newColor);
+                } else {
+                    console.error('Dot element not found for logo:', this.id);
+                }
+            });
         });
     }
 
@@ -122,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         container.style.height = data.height;
                     }
                     console.log('Updated position and size for', id, 'to', data.left, data.top, data.width, data.height);
+                    updateLogoNames(savedLogos);
 
                     // Mise à jour de la taille de la pastille
                     const dot = container.querySelector('.status-dot');
@@ -244,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Ajouter des événements pour le glisser-déposer des logos
     logoContainers.forEach(container => {
         container.addEventListener('mousedown', function (e) {
-            if (!isAdminMode) return;
+            if (!isAdminMode) return; // Sortir si pas en mode admin
             e.preventDefault();
             const container = this;
             const mapContainer = document.getElementById('map-container');
@@ -343,9 +366,9 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => response.json())
         .then(data => {
             console.log('Nom mis à jour avec succès');
-            const logoElement = document.getElementById(id);
-            if (logoElement) {
-                logoElement.setAttribute('title', name);
+            const container = document.getElementById(`container-${id}`);
+            if (container) {
+                container.setAttribute('title', name);
             }
         })
         .catch(error => {
@@ -353,6 +376,14 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function updateLogoNames(savedLogos) {
+        Object.entries(savedLogos).forEach(([id, data]) => {
+            const container = document.getElementById(`container-${id}`);
+            if (container && data.name) {
+                container.setAttribute('title', data.name);
+            }
+        });
+    }
     function updateDotAndHandleSize(container) {
         const dot = container.querySelector('.status-dot');
         const handles = container.querySelectorAll('.resize-handle');
@@ -385,12 +416,13 @@ function updateLogoName(id, name) {
     .then(response => response.json())
     .then(data => {
         console.log('Nom mis à jour avec succès');
-        const logoElement = document.getElementById(id);
-        if (logoElement) {
-            logoElement.setAttribute('title', name);
+        const container = document.getElementById(`container-${id}`);
+        if (container) {
+            container.setAttribute('title', name);
         }
     })
     .catch(error => {
         console.error('Erreur lors de la mise à jour du nom:', error);
     });
 }
+loadLogos();

@@ -1,3 +1,19 @@
+.logo-container:hover::after,
+.logo:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px;
+    border-radius: 3px;
+    white-space: nowrap;
+    z-index: 1000;
+    pointer-events: none;
+}
+
 #map-container {
     position: relative;
     width: 100%;
